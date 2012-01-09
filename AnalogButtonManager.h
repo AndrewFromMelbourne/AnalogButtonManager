@@ -96,13 +96,20 @@ public:
 				}
 				else if ((millis() - _lastDebounceTime) > _debounceDelay)
 				{
-					if ((not _lastRepeatTime)
-						|| ((millis() - _lastRepeatTime) > _repeatDelay))
+					if (not _pressedButton)
 					{
-						_activeButton->repeated();
+						_activeButton->pressed();
+						_pressedButton = _activeButton;
+
 						_lastDebounceTime = millis();
 						_lastRepeatTime = _lastDebounceTime;
-						_pressedButton = _activeButton;
+					}
+					else if ((millis() - _lastRepeatTime) > _repeatDelay)
+					{
+						_pressedButton->repeated();
+
+						_lastDebounceTime = millis();
+						_lastRepeatTime = _lastDebounceTime;
 					}
 				}
 			} 
