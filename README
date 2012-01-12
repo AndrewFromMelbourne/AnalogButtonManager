@@ -1,0 +1,172 @@
+The AnalogButtonManager library was written to provide an interface for 
+buttons that have been multiplexed on an analog pin using different 
+resistors. These multiplexed buttons are found on a number of LCD shields
+available for the arduino, but can also be easily built on a bread board.
+
+Some of the ideas in this code have been taken from Neil DUdman's 
+AnalogButtons library that is available in the Arduino Playground.
+
+http://www.arduino.cc/playground/Code/AnalogButtons
+
+To use the library you need to create an AnalogButtonManager object and a
+number of button objects. The AnalogButtonManager is a template. You need to
+provide the template with the number of buttons that will be managed. The
+constructor for the AnalogButtonManager takes three parameters.
+
+	uint8_t analogPin
+
+		the analog pin that is connected to the buttons
+
+	uint16_t debounceDelay
+
+		the delay in milliseconds for debounce (default is 100 milliseconds)
+
+	uint16_t repeatDelay
+
+		the delay in milliseconds before the key repeats (default is 1000
+		milliseconds).
+
+So to create the AnalogButtonManager for 5 buttons on pin A0, with debounce
+delay 30 and repeat delay 500 the code is
+
+//-------------------------------------------------------------------------
+
+AnalogButtonManager<5> analogButtonManager(A0, 30, 500);
+
+//-------------------------------------------------------------------------
+
+The AnalogButtonManager can then manager upto 5 AnalogButton objects. The
+AnalogButton class by itself doesn't provide any functionality. You need
+to create your own class that inherits from AnalogButton and does something
+with the pressed(), released() and repeated() virtual methods. The following
+example creates a SerialButton class that prints the button state and the 
+name of the button to a serial connection.
+
+//-------------------------------------------------------------------------
+
+class SerialButton
+:
+    public AnalogButton
+{
+public:
+
+    enum Buttons { RIGHT, UP, DOWN, LEFT, SELECT };
+
+    SerialButton(
+        uint8_t id,
+        uint16_t low,
+        uint16_t high,
+        AnalogButtonManagerInterface& abmi,
+        const char* name)
+    :
+        AnalogButton(id, low, high, abmi),
+        _name(name)
+    {
+    }
+    
+    virtual void pressed();
+    virtual void repeated();
+    virtual void released();
+    
+private:
+
+    const char* _name;
+};
+
+//-------------------------------------------------------------------------
+
+void SerialButton::pressed()
+{
+    Serial.print("button ");
+    Serial.print(_name);
+    Serial.println(" was pressed");
+}
+
+//-------------------------------------------------------------------------
+
+void SerialButton::repeated()
+{
+    Serial.print("button ");
+    Serial.print(_name);
+    Serial.println(" repeated");
+}
+
+//-------------------------------------------------------------------------
+
+void SerialButton::released()
+{
+    Serial.print("button ");
+    Serial.print(_name);
+    Serial.println(" was released");
+}
+
+//-------------------------------------------------------------------------
+
+AnalogButtonManager<5> analogButtonManager(A0, 30);
+
+SerialButton b1(SerialButton::RIGHT,
+                0,
+                20,
+                analogButtonManager,
+                "right");
+
+SerialButton b2(SerialButton::UP,
+                135,
+                155,
+                analogButtonManager,
+                "up");
+
+SerialButton b3(SerialButton::DOWN,
+                319,
+                339,
+                analogButtonManager,
+                "down");
+
+SerialButton b4(SerialButton::LEFT,
+                495,
+                515,
+                analogButtonManager,
+                "left");
+
+SerialButton b5(SerialButton::SELECT,
+                731,
+                751,
+                analogButtonManager,
+                "select");
+
+//-------------------------------------------------------------------------
+
+The constructor for the AnalogButton class takes the following parameters:
+
+	uint8_t id
+
+		The identifier for the button. This is usefull if more than one
+		button created using the same class. It allows you to determine
+		which button created the event.
+
+	uint16_t low
+
+		The lowest value read from the analog pin that would indicate this
+		button was pressed.
+
+	uint16_t high
+
+		The highest value read from the analog pin that would indicate this
+		button was pressed.
+
+	AnalogButtonManagerInterface& abmi
+
+		The button manager itself. 
+
+Each of the button objects register themselves with the button manager when
+they are created. The AnalogButtonManager needs to read the analog pin to
+look for button events. You need to call the task() method with the loop()
+as follows:
+
+//-------------------------------------------------------------------------
+
+void loop() 
+{  
+    analogButtonManager.task();
+}
+
