@@ -11,9 +11,9 @@ public:
     enum Buttons { RIGHT, UP, DOWN, LEFT, SELECT };
 
     SerialButton(
-        int id,
-        int low,
-        int high,
+        uint8_t id,
+        uint16_t low,
+        uint16_t high,
         AnalogButtonManagerInterface& abmi,
         const char* name)
     :
