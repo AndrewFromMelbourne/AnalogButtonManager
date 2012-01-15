@@ -23,12 +23,6 @@ class AnalogButtonManagerInterface;
 
 class AnalogButton 
 {
-private: 
-
-	uint8_t _id;
-	uint16_t _low;
-	uint16_t _high;     
-
 public:  
 
 	AnalogButton(
@@ -45,6 +39,11 @@ public:
 	uint16_t getLow() const { return _low; }
 	uint16_t getHigh() const { return _high; }
 
+private: 
+
+	uint8_t _id;
+	uint16_t _low;
+	uint16_t _high;     
 };
 
 //-------------------------------------------------------------------------
