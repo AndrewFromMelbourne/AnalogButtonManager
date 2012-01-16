@@ -37,7 +37,7 @@ public:
 template<uint8_t NumberOfButtons>
 class AnalogButtonManager
 :
-public AnalogButtonManagerInterface
+	public AnalogButtonManagerInterface
 {
 public:
 
@@ -80,7 +80,8 @@ public:
 	{
 		uint16_t value = analogRead(_analogPin);   
 
-		boolean buttonFound = false; 
+		boolean buttonFound = false;
+		uint32_t now = millis();
 
 		for (
 			int8_t i = 0;
@@ -94,7 +95,7 @@ public:
 
 				if (_activeButton != _buttons[i])
 				{
-					_lastDebounceTime = millis();
+					_lastDebounceTime = now;
 					_lastRepeatTime = 0;
 					_activeButton = _buttons[i];
 
@@ -104,21 +105,21 @@ public:
 						_pressedButton = 0;
 					}
 				}
-				else if ((millis() - _lastDebounceTime) > _debounceDelay)
+				else if ((now - _lastDebounceTime) > _debounceDelay)
 				{
 					if (not _pressedButton)
 					{
 						_activeButton->pressed();
 						_pressedButton = _activeButton;
 
-						_lastDebounceTime = millis();
+						_lastDebounceTime = now;
 						_lastRepeatTime = _lastDebounceTime;
 					}
-					else if ((millis() - _lastRepeatTime) > _repeatDelay)
+					else if ((now - _lastRepeatTime) > _repeatDelay)
 					{
 						_pressedButton->repeated();
 
-						_lastDebounceTime = millis();
+						_lastDebounceTime = now;
 						_lastRepeatTime = _lastDebounceTime;
 					}
 				}
