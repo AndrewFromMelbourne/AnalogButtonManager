@@ -46,13 +46,16 @@ public:
 	AnalogButtonManager(
 		uint8_t analogPin,
 		uint16_t debounceDelay = 100,
-		uint16_t repeatDelay = 1000)
+		uint16_t repeatDelay = 1000,
+		uint8_t samplingInterval = 20)
 	:
 		_analogPin(analogPin),
 		_debounceDelay(debounceDelay),
 		_lastDebounceTime(0),
 		_repeatDelay(repeatDelay),
 		_lastRepeatTime(0),
+	    _previousReadTime(0),
+	    _samplingInterval(samplingInterval),
 		_activeButton(0),
 		_pressedButton(0),
 		_buttonsManaged(0)
@@ -78,10 +81,17 @@ public:
 	void
 	task()
 	{
+		uint32_t now = millis();
+
+	    if ((now - _previousReadTime) < _samplingInterval)
+		{
+			return;
+		}
+
 		uint16_t value = analogRead(_analogPin);   
+		_previousReadTime = now;
 
 		boolean buttonFound = false;
-		uint32_t now = millis();
 
 		for (
 			int8_t i = 0;
@@ -149,6 +159,9 @@ private:
 
 	uint16_t _repeatDelay;
 	uint32_t _lastRepeatTime;
+
+	uint32_t _previousReadTime;
+	uint8_t _samplingInterval;
   
 	AnalogButton* _activeButton;
 	AnalogButton* _pressedButton;
