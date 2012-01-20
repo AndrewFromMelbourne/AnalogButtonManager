@@ -139,7 +139,7 @@ public:
 
         if (_previousReadTime > now)
         {
-            elapsed = (0xFFFF - _previousReadTime) + now + 1;
+            elapsed = (0xFFFFFFFF - _previousReadTime) + now + 1;
         }
 
         if (elapsed < _samplingInterval)
