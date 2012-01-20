@@ -70,7 +70,7 @@ void SerialButton::released()
 
 //-------------------------------------------------------------------------
 
-AnalogButtonManager<5> analogButtonManager(A0, 30);
+AnalogButtonManager<5> analogButtonManager(A0);
 
 SerialButton b1(SerialButton::RIGHT,
                 0,
