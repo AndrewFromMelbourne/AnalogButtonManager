@@ -25,25 +25,25 @@ class AnalogButton
 {
 public:  
 
-	AnalogButton(
-		uint8_t id,
-		uint16_t low,
-		uint16_t high,
-		AnalogButtonManagerInterface& abmi);
+    AnalogButton(
+        uint8_t id,
+        uint16_t low,
+        uint16_t high,
+        AnalogButtonManagerInterface& abmi);
 
-	virtual void pressed() {}
-	virtual void repeated() {}
-	virtual void released() {}
+    virtual void pressed() {}
+    virtual void repeated() {}
+    virtual void released() {}
 
-	uint8_t getId() const { return _id; }
-	uint16_t getLow() const { return _low; }
-	uint16_t getHigh() const { return _high; }
+    uint8_t getId() const { return _id; }
+    uint16_t getLow() const { return _low; }
+    uint16_t getHigh() const { return _high; }
 
 private: 
 
-	uint8_t _id;
-	uint16_t _low;
-	uint16_t _high;     
+    uint8_t _id;
+    uint16_t _low;
+    uint16_t _high;     
 };
 
 //-------------------------------------------------------------------------
