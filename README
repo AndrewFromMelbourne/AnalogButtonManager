@@ -35,7 +35,7 @@ AnalogButtonManager<5> analogButtonManager(A0, 30, 500);
 
 //-------------------------------------------------------------------------
 
-The AnalogButtonManager can then manager upto 5 AnalogButton objects. The
+The AnalogButtonManager can then manager up to 5 AnalogButton objects. The
 AnalogButton class by itself doesn't provide any functionality. You need
 to create your own class that inherits from AnalogButton and does something
 with the pressed(), released() and repeated() virtual methods. The following
@@ -140,7 +140,7 @@ The constructor for the AnalogButton class takes the following parameters:
 
 	uint8_t id
 
-		The identifier for the button. This is usefull if more than one
+		The identifier for the button. This is useful if more than one
 		button created using the same class. It allows you to determine
 		which button created the event.
 
